@@ -54,8 +54,12 @@ and falls back to CPU. Check that:
 
 Almost always one of:
 
-- The IR was exported **without** `--from-pretrained` (random weights). Re-run
-  `export.py --from-pretrained models\segformer_b5_mmotu --res 256`.
+- The IR was exported **without** `--from-pretrained` (random weights). Re-run:
+
+  ```powershell
+  venv\Scripts\python.exe -m backend.bootstrap.export ^
+      --from-pretrained models\segformer_b5_mmotu --res 256
+  ```
 - `--res` does not match the resolution the IR was exported at.
 - Dataset paths are wrong — `eval.py` could not find `images/` or
   `annotations/` under `--data`, or `val.txt` lists the wrong stems.
@@ -118,9 +122,11 @@ the camera.
 - Confirm the server is running: the console prints
   `[webapp] serving on http://127.0.0.1:8080`. Open that exact URL.
 - If the port is busy, start on another port: `.\run_webapp.ps1 -Port 8090`.
-- A blank page usually means the prebuilt UI is missing. The clone must contain
-  `webapp\ui\dist\index.html` (it is committed). If it is absent you are on a
-  branch without the build — re-clone.
+- A blank page usually means the prebuilt UI (`webapp\ui\dist`) is missing.
+  `.\run_webapp.ps1` builds it automatically on the first launch — this needs
+  Node.js 18+ on `PATH` — then reuses it on later runs. If the page stays blank,
+  confirm Node.js is installed and re-run `.\run_webapp.ps1` so it can rebuild,
+  or build the UI manually: `cd webapp\ui; npm install; npm run build`.
 
 ## Web dashboard: Start fails with `input not found`
 
@@ -135,8 +141,10 @@ The browser still shows CPU + memory (via `psutil`), but the iGPU / NPU / power
 graphs need the Intel vendor tools and their Python deps:
 
 - Install `pandas` + `pywin32` into the `venv`.
-- Copy a `monitoring\tools` folder (SoCWatch / Level Zero) from your benchmark
-  install into this clone's `monitoring\tools`.
+- Copy the vendor tools from your benchmark install into this clone's
+  `monitoring\tools`: **SoCWatch** (drives the power chart) and **Level Zero**
+  (drives the NPU chart). They are independent — copy either or both; whichever
+  you omit simply shows as unavailable while every other metric keeps working.
 
 These are intentionally not committed (≈139 MB of vendor binaries). Without them
 the pipeline and its latency / FPS / iGPU KPIs still work.
