@@ -1,0 +1,13 @@
+# Core inference stack (verified working set)
+rfdetr==1.12.0
+supervision==0.31.5
+pillow==13.0.0
+numpy==2.5.4
+
+# Dataset prep (reads S-BIAD800 OME-Zarr -> RGB tile)
+zarr==2.18.7
+
+# Optional — only needed for the ONNX / OpenVINO export path in infer_rfdetr.py
+# onnx==1.23.2
+# onnxruntime==1.31.1
+# openvino==2026.4.1
