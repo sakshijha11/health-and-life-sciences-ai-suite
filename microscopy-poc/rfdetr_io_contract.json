@@ -1,0 +1,61 @@
+{
+  "model": "rfdetr-base",
+  "input": {
+    "format": "RGB",
+    "width": 720,
+    "height": 1280,
+    "bit_depth": 8,
+    "note": "Interim test uses 8-bit RGB. Confirm raw/16-bit per Friday PoC."
+  },
+  "output": {
+    "box_coord_space": "pixel_xyxy",
+    "num_detections": 4,
+    "fields": [
+      "bbox_xyxy_px",
+      "class_id",
+      "confidence"
+    ]
+  },
+  "detections": [
+    {
+      "bbox_xyxy_px": [
+        70.56,
+        248.39,
+        648.98,
+        929.04
+      ],
+      "class_id": 18,
+      "confidence": 0.9248
+    },
+    {
+      "bbox_xyxy_px": [
+        0.8,
+        356.69,
+        558.19,
+        1268.7
+      ],
+      "class_id": 1,
+      "confidence": 0.7824
+    },
+    {
+      "bbox_xyxy_px": [
+        625.77,
+        728.1,
+        699.97,
+        786.62
+      ],
+      "class_id": 3,
+      "confidence": 0.7363
+    },
+    {
+      "bbox_xyxy_px": [
+        0.86,
+        663.73,
+        442.8,
+        1271.15
+      ],
+      "class_id": 27,
+      "confidence": 0.6434
+    }
+  ]
+}

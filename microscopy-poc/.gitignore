@@ -1,0 +1,19 @@
+# Python environment
+.venv/
+__pycache__/
+*.pyc
+
+# Datasets & downloaded sources (fetch locally, do not commit)
+sbiad800/
+*.ome.zarr/
+*.zip
+
+# Generated inference artifacts
+output/
+pipeline_out/
+detections.json
+instances.json
+classifications.json
+results.csv
+*overlay*.png
+tonsil1_rgb.png
