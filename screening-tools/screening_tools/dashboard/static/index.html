@@ -1,0 +1,80 @@
+<!doctype html>
+<!-- Copyright © 2026 Intel Corporation. All rights reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Screening Tools</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <h1>Screening Tools <span class="sub">data management and operational efficiency</span></h1>
+  <div class="run">
+    <span id="run-id"></span>
+    <span id="status" class="pill"></span>
+    <button id="stop" type="button">Stop run</button>
+    <a id="download" href="/api/summary" class="disabled">Download summary</a>
+  </div>
+</header>
+
+<main>
+  <section class="kpis" id="kpis"></section>
+
+  <section class="card wide">
+    <h2>Pipeline</h2>
+    <div class="pipeline" id="pipeline"></div>
+    <p class="note" id="backpressure"></p>
+  </section>
+
+  <section class="card">
+    <h2>Run hit list <span class="note">tier 1 first, then QC-flagged</span></h2>
+    <div class="table-wrap"><table id="hits"><thead><tr>
+      <th>#</th><th>Sample</th><th>Hit</th><th>Novelty</th><th>QC</th><th>Note</th>
+    </tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="card">
+    <h2>QC events <span class="note">most recent first</span></h2>
+    <div class="table-wrap"><table id="events"><thead><tr>
+      <th>Code</th><th>Plate</th><th>Sample</th><th>Message</th>
+    </tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="card">
+    <h2>Control trend <span class="note">negative and positive control ratio to baseline, EWMA limits</span></h2>
+    <canvas id="trend" width="640" height="240"></canvas>
+  </section>
+
+  <section class="card">
+    <h2>Last plate <span class="note" id="plate-title"></span></h2>
+    <canvas id="heatmap" width="640" height="300"></canvas>
+    <div class="legend"><span class="sw c1"></span>candidate <span class="sw c2"></span>QC-flagged candidate <span class="sw c3"></span>failed sample QC</div>
+  </section>
+
+  <section class="card">
+    <h2>Throughput <span class="note">samples per second</span></h2>
+    <canvas id="throughput" width="640" height="200"></canvas>
+  </section>
+
+  <section class="card">
+    <h2>Utilisation <span class="note">percent; CPU is the whole system, iGPU is the busiest engine</span></h2>
+    <canvas id="util" width="640" height="200"></canvas>
+    <p class="note" id="gpu-note"></p>
+  </section>
+
+  <section class="card">
+    <h2>Plates <span class="note">QC status, Z' and candidates</span></h2>
+    <canvas id="plates" width="640" height="200"></canvas>
+  </section>
+
+  <section class="card" id="eval-card" hidden>
+    <h2>Demo mode: ground truth <span class="note">computed from the simulator's truth file, never used by the pipeline</span></h2>
+    <div id="eval"></div>
+  </section>
+</main>
+<p class="error" id="error" hidden></p>
+<script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# Runtime dependencies for the Screening Tools app (Windows 11 first; also runs on Linux).
+# Python 3.11 or newer is required (the configuration uses the standard tomllib module).
+openvino>=2025.4,<2027
+numpy>=1.26,<3
+scikit-learn>=1.4,<2
+psutil>=5.9

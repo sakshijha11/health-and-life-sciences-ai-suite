@@ -1,0 +1,111 @@
+# Screening Tools — default configuration.
+#
+# Every threshold, the seed, the plate format, the inference device and the
+# batch size live here. Pass your own file with `--config my.toml`; it only
+# needs the keys you want to change (it is merged over this file).
+
+[run]
+seed = 2027                 # one seed drives the simulator and model training
+plates = 60                 # plates per run
+run_id = ""                 # empty = run-<UTC timestamp>
+output_dir = "runs"         # relative to the app folder; one sub-folder per run
+
+[plate]
+rows = 8                    # 8 x 12 = 96 wells; use 16 x 24 for 384 wells
+cols = 12
+negative_control_column = 1 # 1-based column holding negative controls
+positive_control_column = 12 # 1-based column holding positive controls
+
+[simulator]
+negative_level = 100.0      # mean raw signal of negative controls
+positive_level = 400.0      # mean raw signal of positive controls
+negative_noise = 12.0       # standard deviation of negative wells
+positive_noise = 18.0       # standard deviation of positive wells
+active_rate = 0.03          # fraction of sample wells that are truly active
+edge_effect = 0.06          # relative signal increase on outer wells
+temperature_setpoint = 37.0 # degrees C
+temperature_noise = 0.15
+qc_metric_mean = 0.06       # per-sample read-quality metric (0 good .. 1 bad)
+saturation_value = 4000.0   # detector maximum
+plate_read_seconds = 90.0   # simulated time to read one plate
+telemetry_per_plate = 6     # instrument telemetry readings per plate
+descriptors = 8             # compound-library descriptors per sample
+known_chemotypes = 4        # active compound families seen in training
+novel_chemotypes = 2        # active compound families flagged as novel
+
+# Fault scenarios. Each one is labelled in the ground-truth file.
+[faults.slow_drift]
+enabled = true
+start_plate = 10
+plates = 18                 # the drift lasts this many plates, then the instrument is recalibrated
+gain_per_plate = 0.006      # raw signal gain added per plate after start
+
+[faults.reagent_lot_change]
+enabled = true
+at_plate = 30
+positive_factor = 0.85      # new lot gives a weaker positive control
+
+[faults.temperature_excursion]
+enabled = true
+start_plate = 40
+plates = 4
+delta_c = 3.0
+noise_factor = 1.8
+
+[faults.bad_plate]
+enabled = true
+plates = [22, 47]           # 0-based plate indices
+positive_factor = 0.45      # positive controls collapse -> inflated activity
+
+[faults.well_artifacts]
+enabled = true
+rate = 0.006                # fraction of sample wells with a dispense/bubble artifact
+visible_fraction = 0.8      # share of artifacts that also raise the QC metric
+
+[ingestion]
+buffer_size = 2048          # bounded buffer between source and pipeline (records)
+stage_queue_plates = 4      # bounded queues between later stages (plates)
+rate = 0.0                  # wells per second read from the source (controls included); 0 = as fast as possible
+
+[qc]
+zprime_warn = 0.5
+zprime_fail = 0.3
+control_tolerance = 0.25    # control means must be within +-25% of calibration
+control_cv_warn = 0.20
+signal_to_background_min = 2.0
+min_controls = 4            # fewer valid controls than this fails the plate
+qc_metric_fail = 0.25
+anomaly_threshold = 0.62    # Isolation Forest score (0..1, higher = more unusual)
+temperature_band = 1.0      # allowed deviation from set point, degrees C
+
+[drift]
+ewma_lambda = 0.3
+ewma_limit_sigma = 3.5
+cusum_k_sigma = 0.5
+cusum_h_sigma = 6.0
+baseline_plates = 10        # plates used to learn the in-control level
+lot_window = 4              # plates compared before and after a lot change
+lot_shift_warn = 0.08       # relative change that raises a lot-shift event
+
+[hit_scoring]
+device = "GPU"              # "GPU" (iGPU) or "CPU"; no silent fallback
+batch_size = 256            # samples per inference request
+hit_threshold = 0.5         # activity probability at or above this is a hit
+
+[model]
+hidden_layers = [512, 512, 256]
+epochs = 30
+train_plates = 600
+val_plates = 100
+test_plates = 100
+learning_rate = 0.001
+batch_size = 512
+anomaly_trees = 200
+
+[dashboard]
+port = 8765
+refresh_ms = 1000
+
+[telemetry]
+sample_interval_s = 0.5     # CPU and iGPU utilisation sampling period
+warmup_plates = 3           # excluded from steady-state throughput and latency

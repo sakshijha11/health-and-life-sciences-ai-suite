@@ -1,0 +1,18 @@
+# Virtual environments
+venv/
+.venv/
+
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Models are built locally by `python -m screening_tools setup`; never committed.
+models/*
+!models/README.md
+
+# Run outputs, recordings and benchmark results
+runs/
+
+# OpenVINO GPU kernel cache
+cache/

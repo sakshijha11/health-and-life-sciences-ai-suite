@@ -23,6 +23,7 @@ jobs:
       nicu-warmer_changed: ${{ steps.filter.outputs.nicu-warmer }}
       surgical-instrument_changed: ${{ steps.filter.outputs.surgical-instrument }}
       ultrasound-ovarian-segmentation_changed: ${{ steps.filter.outputs.ultrasound-ovarian-segmentation }}
+      screening-tools_changed: ${{ steps.filter.outputs.screening-tools }}
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -41,6 +42,8 @@ jobs:
               - 'surgical-instrument/docs/user-guide/**'
             ultrasound-ovarian-segmentation:
               - 'ultrasound-ovarian-segmentation/docs/user-guide/**'
+            screening-tools:
+              - 'screening-tools/docs/user-guide/**'
 
   build-multi-modal-patient-monitoring:
     permissions:
@@ -77,3 +80,12 @@ jobs:
     uses: ./.github/workflows/docs-reusable-workflow.yaml
     with:
       docs_directory: ultrasound-ovarian-segmentation
+
+  build-screening-tools:
+    permissions:
+      contents: read # needed for actions/checkout
+    needs: filter
+    if: ${{ needs.filter.outputs.screening-tools_changed == 'true' }}
+    uses: ./.github/workflows/docs-reusable-workflow.yaml
+    with:
+      docs_directory: screening-tools
